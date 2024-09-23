@@ -12,12 +12,11 @@ class Toggle_Payments_By_Category_Admin
         add_action('admin_post_tpbc_update_settings', array($this, 'update_settings'));
     }
 
-    public function enqueue_admin_scripts() {
+    public function enqueue_admin_scripts()
+    {
         wp_enqueue_style('tpbc_admin_style', TPBC_PLUGIN_URL . 'assets/css/admin.css', array(), TPBC_VERSION);
         wp_enqueue_script('tpbc_admin_scripts', TPBC_PLUGIN_URL . 'assets/js/admin.js', array('jquery'), TPBC_VERSION, true);
     }
-
-
 
 
     public function admin_menu()
@@ -35,13 +34,15 @@ class Toggle_Payments_By_Category_Admin
     }
 
 
-    public function admin_page() {
+    public function admin_page()
+    {
 
         ?>
         <div class="wrap">
             <h2>Toggle Payments by Category</h2>
             <button type="button" class="add-new-button">Add New</button>
-            <form class="product-catalog-mode-form" method="POST" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+            <form class="product-catalog-mode-form" method="POST"
+                  action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                 <?php
                 // Fetch product categories
                 $categories = get_terms(array(
@@ -52,16 +53,16 @@ class Toggle_Payments_By_Category_Admin
                 ?>
                 <div class="form-container">
                     <table id="payment-table" class="form-table">
-                        <thead>
+                        <thead class="heading">
                         <tr>
-                            <th>Category</th>
-                            <th>Payment Method</th>
-                            <th>Payment Visibility</th>
-                            <th>Action</th>
+                            <th style="text-align: center">Category</th>
+                            <th style="text-align: center">Payment Method</th>
+                            <th style="text-align: center">Payment Visibility</th>
+                            <th style="text-align: center">Action</th>
                         </tr>
                         </thead>
 
-                        <tbody>
+                        <tbody class="row">
                         <!-- Template Row (Hidden) -->
                         <tr class="template-row" style="display:none;">
                             <td>
@@ -83,10 +84,15 @@ class Toggle_Payments_By_Category_Admin
                                 </select>
                             </td>
                             <td>
-                                <select name="payment_visibility[]">
-                                    <option value="show">Show Payment</option>
-                                    <option value="hide">Hide Payment</option>
-                                </select>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="payment_visibility[]"
+                                           value="hide" <?php checked('hide', $setting['visibility']); ?>
+                                           onchange="this.value = this.checked ? 'hide' : 'show';">
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="toggle-comment">
+                                            <?php echo $setting['visibility'] === 'hide' ? 'Hide Payment' : 'Show Payment'; ?>
+                                        </span>
                             </td>
                             <td>
                                 <button type="button" class="delete-button">Delete</button>
@@ -120,11 +126,17 @@ class Toggle_Payments_By_Category_Admin
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="payment_visibility[]">
-                                            <option value="show" <?php selected('show', $setting['visibility']); ?>>Show Payment</option>
-                                            <option value="hide" <?php selected('hide', $setting['visibility']); ?>>Hide Payment</option>
-                                        </select>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" name="payment_visibility[]"
+                                                   value="hide" <?php checked('hide', $setting['visibility']); ?>
+                                                   onchange="this.value = this.checked ? 'hide' : 'show';">
+                                            <span class="slider"></span>
+                                        </label>
+                                        <span class="toggle-comment">
+                                            <?php echo $setting['visibility'] === 'hide' ? 'Hide Payment' : 'Show Payment'; ?>
+                                        </span>
                                     </td>
+
                                     <td>
                                         <button type="button" class="delete-button">Delete</button>
                                     </td>
@@ -150,10 +162,8 @@ class Toggle_Payments_By_Category_Admin
     }
 
 
-
-
-
-    public function update_settings() {
+    public function update_settings()
+    {
         if (!check_admin_referer('tpbc_update_settings')) {
             wp_die(esc_html__('Security check failed', 'toggle-payment-by-category'));
         }
@@ -176,9 +186,6 @@ class Toggle_Payments_By_Category_Admin
         wp_safe_redirect(wp_get_referer());
         exit;
     }
-
-
-
 
 
 }
